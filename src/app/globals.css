@@ -1,0 +1,121 @@
+/* 全局样式 - globals.css */
+
+/* 设置渐变背景和全局字体 */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Arial', sans-serif;
+  background: linear-gradient(to bottom right, #b0c4de, #d8bfd8); /* 调暗的浅蓝到浅紫渐变 */
+  color: #333; /* 深灰色文字 */
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+h1, h2 {
+  font-weight: bold;
+  color: #222; /* 更深的文字颜色，增加对比度 */
+  margin-bottom: 1rem;
+}
+
+h1 {
+  font-size: 2.8rem; /* 略微增大标题字体，增强视觉冲击 */
+}
+
+h2 {
+  font-size: 2rem;
+}
+
+p {
+  font-size: 1.15rem; /* 略微增大段落字体 */
+  line-height: 1.8;
+  margin: 1rem 0;
+  color: #444; /* 更深的灰色 */
+}
+
+a {
+  color: #0056b3; /* 深蓝色，适合商务风格 */
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 1.5rem auto;
+}
+
+.container {
+  max-width: 1100px; /* 略微减少宽度，更加紧凑 */
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* 固定的页头 */
+.header {
+  background-color: #fff; /* 白色背景 */
+  color: #222; /* 深灰色文字 */
+  padding: 1rem 2rem;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 增加阴影效果，显得更有层次 */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+}
+
+.main {
+  padding-top: 120px; /* 增加顶部内边距，避免被页头遮挡 */
+}
+
+.footer {
+  background-color: #222; /* 深灰色背景，增强商务感 */
+  color: #fff;
+  text-align: center;
+  padding: 2rem; /* 增加页脚的高度，增强稳定感 */
+  margin-top: 3rem;
+}
+
+/* CTA按钮样式 */
+.cta-button {
+  background-color: #0056b3; /* 深蓝色，商务风格 */
+  color: white;
+  padding: 12px 24px;
+  text-align: center;
+  border-radius: 8px; /* 圆角按钮，看起来更现代 */
+  display: inline-block;
+  font-size: 1.2rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 增加轻微阴影 */
+  transition: background-color 0.3s ease;
+}
+
+.cta-button:hover {
+  background-color: #003d80; /* 增加按钮悬停时的对比 */
+}
+
+@media (max-width: 768px) {
+  h1 {
+    font-size: 2.4rem;
+  }
+
+  h2 {
+    font-size: 1.8rem;
+  }
+
+  .container {
+    padding: 1rem;
+  }
+
+  .header, .footer {
+    padding: 1rem;
+  }
+
+  .main {
+    padding-top: 100px; /* 调整小屏幕的内边距 */
+  }
+}
