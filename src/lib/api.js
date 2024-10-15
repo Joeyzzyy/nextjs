@@ -3,6 +3,10 @@ import axios from 'axios';
 const API_URL = process.env.NEXT_PUBLIC_STRAPI_API_URL;
 const STRAPI_API_TOKEN = process.env.NEXT_PUBLIC_STRAPI_API_TOKEN; // 确保在环境变量中正确配置
 
+if (!STRAPI_API_TOKEN) {
+  throw new Error('环境变量 NEXT_PUBLIC_STRAPI_API_TOKEN 未定义');
+}
+
 // 创建 axios 实例，带有默认的头信息（包括认证）
 const apiClient = axios.create({
   baseURL: API_URL,
