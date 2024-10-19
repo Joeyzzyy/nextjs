@@ -3,15 +3,19 @@
 import { useState, useEffect } from 'react';
 import { getArticles, getAuthors } from '../lib/api';
 import Link from 'next/link';
-import { Select, Typography } from 'antd';
-import { Row, Col } from 'antd';
+import { Select, Typography, Layout, Menu, Table, Space, Input, Button, Form } from 'antd';
+import { SearchOutlined, FileTextOutlined, GlobalOutlined } from '@ant-design/icons';
 
 const { Option } = Select;
+const { Header, Sider, Content } = Layout;
+const { Title } = Typography;
 
 export default function Home() {
   const [articles, setArticles] = useState([]);
   const [authors, setAuthors] = useState([]);
   const [selectedAuthor, setSelectedAuthor] = useState('');
+  const [searchText, setSearchText] = useState('');
+  const [activeMenu, setActiveMenu] = useState('articles');
 
   useEffect(() => {
     // 初始获取所有文章和作者
@@ -49,93 +53,114 @@ export default function Home() {
     setSelectedAuthor(value);  // 更新选中的作者 ID
   };
 
-  return (
-    <div className="home-container">
-      {/* 作者选择下拉框 */}
-      <Row justify="center" gutter={[32, 32]}>
-        <Col span={32}>
-          <Typography.Title level={5} style={{ textAlign: 'center' }}>
-            Select Author
-          </Typography.Title>
-          <Select
-            placeholder="Select author"
-            value={selectedAuthor}
-            onChange={handleAuthorChange}
-            style={{ width: '100%' }}
+  const columns = [
+    {
+      title: 'Title',
+      dataIndex: 'title',
+      key: 'title',
+      width: '66%',
+      render: (text, record) => (
+        <Link href={`/articles/${record.slug}`}>
+          {text}
+        </Link>
+      ),
+    },
+    {
+      title: 'Author',
+      dataIndex: ['author', 'name'],
+      key: 'author',
+      width: '34%',
+    },
+  ];
+
+  const filteredArticles = articles.filter(article =>
+    article.title.toLowerCase().includes(searchText.toLowerCase())
+  );
+
+  const renderContent = () => {
+    if (activeMenu === 'articles') {
+      return (
+        <>
+          <Space style={{ marginBottom: 16, justifyContent: 'space-between', width: '100%' }}>
+            <Space>
+              <Select
+                placeholder="Select author"
+                value={selectedAuthor}
+                onChange={handleAuthorChange}
+                style={{ width: 200 }}
+              >
+                <Option value="">All Authors</Option>
+                {authors.map((author) => (
+                  <Option key={author.id} value={author.id}>
+                    {author.name}
+                  </Option>
+                ))}
+              </Select>
+              <Input
+                placeholder="Search articles"
+                prefix={<SearchOutlined />}
+                value={searchText}
+                onChange={(e) => setSearchText(e.target.value)}
+                style={{ width: 200 }}
+              />
+            </Space>
+            <Button type="primary">Publish</Button>
+          </Space>
+          <Table
+            columns={columns}
+            dataSource={filteredArticles}
+            rowKey="id"
+            pagination={{ pageSize: 10 }}
+          />
+        </>
+      );
+    } else if (activeMenu === 'domain') {
+      return (
+        <Form layout="vertical" style={{ maxWidth: 600 }}>
+          <Form.Item
+            name="domain"
+            label="Custom Domain"
+            rules={[{ required: true, message: 'Please input your custom domain!' }]}
           >
-            <Option value="">All Authors</Option>
-            {authors.map((author) => (
-              <Option key={author.id} value={author.id}>
-                {author.name}
-              </Option>
-            ))}
-          </Select>
-        </Col>
-      </Row>
+            <Input placeholder="Enter your custom domain (e.g., myblog.com)" />
+          </Form.Item>
+          <Form.Item>
+            <Button type="primary">Bind Domain</Button>
+          </Form.Item>
+        </Form>
+      );
+    }
+  };
 
-      {/* 文章列表 */}
-      <Row justify="center" gutter={[32, 32]}>
-        <Col span={32}>
-          <Typography.Title level={4} style={{ marginTop: '20px', textAlign: 'center' }}>
-            Articles List
-          </Typography.Title>
-          <ul className="article-list">
-            {articles.map((article) => (
-              <li key={article.id} className="article-item">
-                <Link href={`/articles/${article.slug}`} legacyBehavior>
-                  <a style={{ display: 'block', wordBreak: 'break-word' }}>{article.title}</a>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </Col>
-      </Row>
-
-      {/* 样式 */}
-      <style jsx>{`
-        .home-container {
-          min-width: 800px;
-          max-width: 1200px;
-          margin: 0 auto;
-          padding: 2rem;
-          display: flex;
-          flex-direction: column;
-          align-items: center; /* 水平居中 */
-        }
-
-        .article-list {
-          list-style-type: none;
-          padding: 0;
-        }
-
-        .article-item {
-          min-width: 480px;
-          background-color: #f9f9f9;
-          border: 1px solid #ddd;
-          border-radius: 5px;
-          margin-bottom: 1rem;
-          padding: 1rem;
-          width: 100%; /* 确保宽度适应长标题 */
-          transition: background-color 0.3s ease;
-        }
-
-        .article-item:hover {
-          background-color: #f1f1f1;
-        }
-
-        a {
-          text-decoration: none;
-          color: #007bff;
-          font-size: 1.2rem;
-          word-wrap: break-word;
-          display: block;
-          width: 100%;
-        }
-
-        a:hover {
-          text-decoration: underline;
-        }
-      `}</style>
-    </div>
+  return (
+    <Layout style={{ minHeight: '100vh' }}>
+      <Sider width={200} theme="light">
+        <Menu
+          mode="inline"
+          defaultSelectedKeys={['articles']}
+          style={{ height: '100%', borderRight: 0 }}
+          onSelect={({ key }) => setActiveMenu(key)}
+        >
+          <Menu.Item key="articles" icon={<FileTextOutlined />}>
+            Articles
+          </Menu.Item>
+          <Menu.Item key="domain" icon={<GlobalOutlined />}>
+            Domain Setting
+          </Menu.Item>
+        </Menu>
+      </Sider>
+      <Layout>
+        <Header style={{ background: '#fff', padding: 0 }}>
+          <Title level={3} style={{ margin: '16px 24px' }}>
+            Article Publish System
+          </Title>
+        </Header>
+        <Content style={{ margin: '24px 16px 0' }}>
+          <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>
+            {renderContent()}
+          </div>
+        </Content>
+      </Layout>
+    </Layout>
   );
 }
