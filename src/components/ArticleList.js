@@ -34,8 +34,11 @@ export default function ArticleList({  }) {
   };
 
   const getArticleUrl = (article) => {
-    if (authorDomainMap && authorDomainMap[article.authorId]) {
-      return `https://${authorDomainMap[article.authorId]}/articles/${article.slug}`;
+    console.log('authorDomainMap is: ', authorDomainMap);
+    var domainName = authorDomainMap[article.author.id];
+    console.log('url is:', `https://${domainName}/articles/${article.slug}`);
+    if (authorDomainMap && domainName) {
+      return `https://${domainName}/articles/${article.slug}`;
     }
     // 如果没有映射，使用当前域名
     return `/articles/${article.slug}`;
