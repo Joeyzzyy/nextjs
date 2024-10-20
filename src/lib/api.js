@@ -2,6 +2,7 @@ import axios from 'axios';
 
 const API_URL = process.env.NEXT_PUBLIC_STRAPI_API_URL;
 const STRAPI_API_TOKEN = process.env.NEXT_PUBLIC_STRAPI_API_TOKEN; // 确保在环境变量中正确配置
+const REACT_APP_VERCEL_TOKEN = process.env.NEXT_PUBLIC_REACT_APP_VERCEL_TOKEN;
 
 if (!STRAPI_API_TOKEN) {
   throw new Error('环境变量 NEXT_PUBLIC_STRAPI_API_TOKEN 未定义');
@@ -48,46 +49,56 @@ export async function getArticleBySlug(slug) {
   }
 }
 
-// 创建新的文章
-export async function createArticle(articleData) {
-  try {
-    const response = await apiClient.post('/api/articles', {
-      data: articleData,
-    });
-    console.log('Article created successfully:', response.data);
-    return response.data; // 返回新创建的文章
-  } catch (error) {
-    console.error('Error creating article:', error.response?.data || error.message);
-    throw error;
-  }
-}
-
 // 获取所有作者
 export async function getAuthors() {
   try {
     const response = await apiClient.get('/api/authors');
-    return response.data.data; // 返回作者列表
+    return response.data.data;
   } catch (error) {
-    console.error('Error fetching authors:', error.response?.data || error.message);
     throw error;
   }
 }
 
-// 获取所有分类
-export async function getCategories() {
+const VERCEL_API_URL = 'https://api.vercel.com';
+const PROJECT_ID = 'intelick-nextjs'; // 替换为您的Vercel项目ID
+
+export async function getVercelDomains() {
   try {
-    const response = await apiClient.get('/api/categories');
-    return response.data.data; // 返回分类列表
+    const response = await fetch(`${VERCEL_API_URL}/v9/projects/${PROJECT_ID}/domains`, {
+      headers: {
+        'Authorization': `Bearer ` + REACT_APP_VERCEL_TOKEN,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('获取域名失败');
+    }
+
+    const data = await response.json();
+    return data.domains.filter(domain => domain.verified);
   } catch (error) {
-    console.error('Error fetching categories:', error.response?.data || error.message);
+    console.error('获取Vercel域名时出错:', error);
     throw error;
   }
 }
 
-// 获取 Strapi 的媒体资源 URL
-export function getStrapiMedia(url) {
-  if (url.startsWith('/')) {
-    return `${API_URL}${url}`; // 拼接完整的媒体 URL
+export async function associateDomainWithAuthor(authorId, domainName) {
+  try {
+    const response = await fetch('/api/associate-domain', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ authorId, domainName }),
+    });
+
+    if (!response.ok) {
+      throw new Error('关联作者和域名失败');
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('关联作者和域名时出错:', error);
+    throw error;
   }
-  return url;
 }

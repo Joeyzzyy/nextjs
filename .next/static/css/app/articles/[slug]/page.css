@@ -1,0 +1,32 @@
+/*!***********************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[7].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[7].use[3]!./src/components/LayoutAuthor1.module.css ***!
+  \***********************************************************************************************************************************************************************************************************************************************************************************/
+/* components/LayoutAuthor1.module.css */
+
+.LayoutAuthor1_layout__lVNjE {
+  background-color: #ffffff; /* 客户自定义的背景色 */
+  min-height: 100vh;
+}
+
+.LayoutAuthor1_header__FAJVR {
+  background-color: #3f51b5;
+  color: white;
+  padding: 20px;
+  text-align: center;
+  border-bottom: 5px solid #FFC107;
+}
+
+.LayoutAuthor1_main__3dStv {
+  padding: 40px 20px;
+  background-color: #F9F9F9;
+}
+
+.LayoutAuthor1_footer__0t2fY {
+  background-color: #3f51b5;
+  color: white;
+  text-align: center;
+  padding: 20px;
+  border-top: 5px solid #FFC107;
+  margin-top: 40px;
+}
+
